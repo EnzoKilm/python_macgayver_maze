@@ -1,7 +1,7 @@
 ##############################
 #       Maze MacGayver       #
 #     par Enzo Beauchamp     #
-#      Version : 1.0.1       #
+#      Version : 1.0.2       #
 ##############################
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
@@ -21,6 +21,7 @@ with open('maps.txt', 'r') as grille:
         i += 1
     # Ajout des objets sur la carte
     elements_a_placer = ['1', '2', '3']
+    elements_a_rassembler = elements_a_placer.copy()
     while elements_a_placer != []:
         y_random = randint(0,len(matrice_carte)-1)
         x_random = randint(0,len(matrice_carte[0])-1)
@@ -40,7 +41,8 @@ def print_map():
 
 # Initialisation du jeu
 def init():
-    global pos_joueur
+    global pos_joueur, inventaire_joueur
+    inventaire_joueur = []
     y = 0
     for ligne in carte:
         x = 0
@@ -54,8 +56,14 @@ def init():
 def mouvement(y, x):
     matrice_carte[pos_joueur[0]][pos_joueur[1]] = '_'
 
+    # On vérifie que le joueur ne soit pas sur un mur
     if matrice_carte[pos_joueur[0]+y][pos_joueur[1]+x] != '#':
+        # Si il est bien dans la carte
         if pos_joueur[0]+y >= 0 and pos_joueur[1]+x >= 0:
+            # Si il est sur un objet
+            if matrice_carte[pos_joueur[0]+y][pos_joueur[1]+x] in elements_a_rassembler:
+                inventaire_joueur.append(matrice_carte[pos_joueur[0]+y][pos_joueur[1]+x])
+                print(inventaire_joueur)
             pos_joueur[0] += y
             pos_joueur[1] += x
 
