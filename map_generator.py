@@ -29,10 +29,6 @@ def cell_propagation(map_name, cell_coordinates):
         if cells_around[cell][0] >= 0 and cells_around[cell][0] < len(map_name):
             if cells_around[cell][1] >= 0 and cells_around[cell][1] < len(map_name[0]):
                 cells_around_names.append(cell)
-                """if map_name[cells_around[cell][0]][cells_around[cell][1]] == '#':
-                    if random.random() < 0.5:
-                        map_name[cells_around[cell][0]][cells_around[cell][1]] = '_'
-                        cell_propagation(map_name, (cells_around[cell][0], cells_around[cell][1]))"""
 
     # Propagating cells
     if cells_around_names != []:
@@ -41,12 +37,6 @@ def cell_propagation(map_name, cell_coordinates):
         if map_name[cells_around[random_cell_around][0]][cells_around[random_cell_around][1]] != 'A':
             map_name[cells_around[random_cell_around][0]][cells_around[random_cell_around][1]] = '_'
             # Map print
-            """print("===============")
-            for y in range(0, len(new_map)):
-                map_line = ''
-                for x in range(0, len(new_map[y])):
-                    map_line += new_map[y][x]
-                print(map_line)"""
             cell_propagation(map_name, (cells_around[random_cell_around][0],cells_around[random_cell_around][1]))
     
         
