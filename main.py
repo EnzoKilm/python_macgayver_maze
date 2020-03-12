@@ -1,27 +1,33 @@
 ##############################
 #       Maze MacGayver       #
 #     par Enzo Beauchamp     #
-#      Version : 1.0.0       #
+#      Version : 1.0.1       #
 ##############################
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 from random import randint
 
-# Ouverture du fichier contenant la carte
-grille = open('maps.txt', 'r')
-carte = grille.readlines()
-grille.close()
-
 # Transformation map texte en matrice
-matrice_carte = []
-i = 0
-for ligne in carte:
-    matrice_carte.append([])
-    for case in ligne:
-        if case != "\n":
-            matrice_carte[i].append(case)
-    i += 1
+with open('maps.txt', 'r') as grille:
+    carte = grille.readlines()
+    matrice_carte = []
+    i = 0
+    for ligne in carte:
+        matrice_carte.append([])
+        for case in ligne:
+            if case != "\n":
+                matrice_carte[i].append(case)
+        i += 1
+    # Ajout des objets sur la carte
+    elements_a_placer = ['1', '2', '3']
+    while elements_a_placer != []:
+        y_random = randint(0,len(matrice_carte)-1)
+        x_random = randint(0,len(matrice_carte[0])-1)
+        if matrice_carte[y_random][x_random] == '_':
+            matrice_carte[y_random][x_random] = elements_a_placer[0]
+            del elements_a_placer[0]
+        
 
 # Affichage de la carte
 def print_map():
