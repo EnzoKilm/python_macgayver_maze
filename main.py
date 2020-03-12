@@ -1,7 +1,7 @@
 ##############################
 #       Maze MacGayver       #
 #     par Enzo Beauchamp     #
-#      Version : 1.0.2       #
+#      Version : 1.0.3       #
 ##############################
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
@@ -41,7 +41,9 @@ def print_map():
 
 # Initialisation du jeu
 def init():
-    global pos_joueur, inventaire_joueur
+    global pos_joueur, inventaire_joueur, partie_en_cours, partie_gagnee
+    partie_gagnee = False
+    partie_en_cours = True
     inventaire_joueur = []
     y = 0
     for ligne in carte:
@@ -54,16 +56,25 @@ def init():
 
 # Gestion des déplacements
 def mouvement(y, x):
+    global partie_gagnee, partie_en_cours
     matrice_carte[pos_joueur[0]][pos_joueur[1]] = '_'
 
-    # On vérifie que le joueur ne soit pas sur un mur
-    if matrice_carte[pos_joueur[0]+y][pos_joueur[1]+x] != '#':
-        # Si il est bien dans la carte
-        if pos_joueur[0]+y >= 0 and pos_joueur[1]+x >= 0:
+    # Si il est bien dans la carte
+    if pos_joueur[0]+y >= 0 and pos_joueur[1]+x >= 0 and pos_joueur[0]+y < len(matrice_carte) and pos_joueur[1]+x < len(matrice_carte[0]):
+        # On vérifie que le joueur ne soit pas sur un mur
+        if matrice_carte[pos_joueur[0]+y][pos_joueur[1]+x] != '#':
             # Si il est sur un objet
             if matrice_carte[pos_joueur[0]+y][pos_joueur[1]+x] in elements_a_rassembler:
                 inventaire_joueur.append(matrice_carte[pos_joueur[0]+y][pos_joueur[1]+x])
                 print(inventaire_joueur)
+            # Ou si il est sur la case d'arrivée
+            elif matrice_carte[pos_joueur[0]+y][pos_joueur[1]+x] == 'A':
+                partie_en_cours = False
+                if len(inventaire_joueur) == len(elements_a_rassembler):
+                    partie_gagnee = True
+                else:
+                    partie_gagnee = False
+            # On le déplace
             pos_joueur[0] += y
             pos_joueur[1] += x
 
@@ -73,11 +84,13 @@ def mouvement(y, x):
 # Lancement du jeu
 def lancement():
     init()
-    while True:
+    while partie_en_cours == True:
         print_map()
         deplacement = ''
+        # Tant que l'utilisateur ne saisit pas un déplacement correct
         while deplacement not in ['z', 'q', 's', 'd']:
             deplacement = input('Déplacement (z,q,s,d) : ')
+            # On effectue le déplacement souhaité par le joueur
             if deplacement == 'z':
                 mouvement(-1, 0)
             elif deplacement == 'q':
@@ -86,6 +99,11 @@ def lancement():
                 mouvement(1, 0)
             elif deplacement == 'd':
                 mouvement(0, 1)
-
+    # On regarde si il a gagné ou non
+    if partie_gagnee == True:
+        print("Bravo, vous avez endormi le garde et réussi à vous échapper!")
+    else:
+        print("Vous n'avez pas réuni tous les éléments nécessaires pour endormir le garde, il vous a donc assommé!")
+        
 if __name__ == "__main__":
     lancement()
