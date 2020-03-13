@@ -14,6 +14,15 @@ for y in range(0, map_height):
 new_map[0][0] = '_'
 new_map[map_height-1][map_width-1] = 'A'
 
+
+# Map print
+for y in range(0, len(new_map)):
+    map_line = ''
+    for x in range(0, len(new_map[y])):
+        map_line += new_map[y][x]
+    print(map_line)
+
+
 # Cell propagation function
 def cell_propagation(map_name, cell_coordinates):
     cells_around = {
